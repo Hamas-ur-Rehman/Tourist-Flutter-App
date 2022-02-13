@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "300823015189",
+    "project_id": "orbailixtest",
+    "storage_bucket": "orbailixtest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:300823015189:android:23f0fd6c6445578645431c",
+        "android_client_info": {
+          "package_name": "com.hamas.tourist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "300823015189-tpf7tfd8ed32u5a7j36t72m8gsmdeq61.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hamas.tourist",
+            "certificate_hash": "bbc3fdbd6458e5221e6845c8e8dad03e98301b21"
+          }
+        },
+        {
+          "client_id": "300823015189-eqg9n0gq8u6bck2ur3l0dqv93jno1uba.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXo6CfiQzngPC5oJlNmDH8X3Nps_XI0Uk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "300823015189-eqg9n0gq8u6bck2ur3l0dqv93jno1uba.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
