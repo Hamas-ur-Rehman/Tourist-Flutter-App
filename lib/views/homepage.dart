@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tourist/theme/theme.dart';
+import 'package:tourist/views/bizdetails.dart';
 import 'package:tourist/views/cities.dart';
 import 'dart:math';
 
@@ -180,7 +181,8 @@ class CustomBottomList extends StatelessWidget {
                     itemBuilder: (context, index) {
                       String name = snapshot.data!.docs[index]['name'];
                       String image = snapshot.data!.docs[index]['img'];
-                      String id = snapshot.data!.docs[index].id;
+                      String address = snapshot.data!.docs[index]['address'];
+                      int price = snapshot.data!.docs[index]['price'];
 
                       return SizedBox(
                         width: MediaQuery.of(context).size.width * 0.6,
@@ -191,7 +193,12 @@ class CustomBottomList extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Cities(id)),
+                                    builder: (context) => BizDetails(
+                                          name: name,
+                                          image: image,
+                                          address: address,
+                                          price: price,
+                                        )),
                               );
                             },
                             child: Card(

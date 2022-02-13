@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tourist/theme/theme.dart';
 import 'package:tourist/views/authentication/signup.dart';
 import 'package:tourist/views/homepage.dart';
-import 'package:tourist/widgets/custom_checkbox.dart';
 import 'package:tourist/widgets/primary_button.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,10 +15,16 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool passwordVisible = false;
+  bool isChecked = false;
   void togglePassword() {
     setState(() {
       passwordVisible = !passwordVisible;
     });
+  }
+
+  setprefs(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('email', email);
   }
 
   //login function
@@ -137,7 +143,31 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const CustomCheckbox(),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isChecked = !isChecked;
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: isChecked ? primaryBlue : Colors.transparent,
+                        borderRadius: BorderRadius.circular(4.0),
+                        border: isChecked
+                            ? null
+                            : Border.all(color: textGrey, width: 1.5),
+                      ),
+                      width: 20,
+                      height: 20,
+                      child: isChecked
+                          ? const Icon(
+                              Icons.check,
+                              size: 20,
+                              color: Colors.white,
+                            )
+                          : null,
+                    ),
+                  ),
                   const SizedBox(
                     width: 12,
                   ),
@@ -165,6 +195,9 @@ class _LoginPageState extends State<LoginPage> {
                             password: passwordController.text,
                             context: context);
                         if (user != null) {
+                          if (isChecked) {
+                            setprefs(emailController.text);
+                          }
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                               builder: (context) => HomePage(),
