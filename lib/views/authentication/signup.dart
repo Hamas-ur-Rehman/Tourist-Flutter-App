@@ -1,12 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tourist/theme/theme.dart';
+import 'package:tourist/views/authentication/login.dart';
 
 import '../homepage.dart';
 
 class Signup extends StatefulWidget {
-  const Signup({Key? key}) : super(key: key);
+  bool adminstatus;
+  Signup({Key? key, required this.adminstatus}) : super(key: key);
 
   @override
   _SignupState createState() => _SignupState();
@@ -296,9 +299,26 @@ class _SignupState extends State<Signup> {
                         } else {
                           if (_formKey.currentState!.validate()) {
                             User? user = await registerUsingEmailPassword(
-                                email: email,
-                                password: password,
-                                context: context);
+                                    email: email,
+                                    password: password,
+                                    context: context)
+                                .then((value) {
+                              FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(value!.uid)
+                                  .set({
+                                // 'name': name,
+                                'email': value.email,
+                                // 'phone': phone,
+                                // 'address': address,
+                                'isAdmin': false,
+                                'isVerified': false,
+                                'isBlocked': false,
+                                'isDeleted': false,
+                                'createdAt': Timestamp.now(),
+                                'updatedAt': Timestamp.now(),
+                              });
+                            });
                             if (user != null) {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
@@ -334,7 +354,7 @@ class _SignupState extends State<Signup> {
                     onTap: () {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                          builder: (context) => const Signup(),
+                          builder: (context) => const LoginPage(),
                         ),
                       );
                     },

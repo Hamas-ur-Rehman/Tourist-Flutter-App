@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tourist/theme/theme.dart';
+import 'package:tourist/views/authentication/adminchoice.dart';
 import 'package:tourist/views/authentication/signup.dart';
 import 'package:tourist/views/homepage.dart';
 import 'package:tourist/widgets/primary_button.dart';
@@ -247,7 +248,7 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                          builder: (context) => const Signup(),
+                          builder: (context) => const ChooseAdmin(),
                         ),
                       );
                     },
