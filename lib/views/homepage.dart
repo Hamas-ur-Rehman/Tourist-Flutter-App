@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tourist/theme/theme.dart';
 import 'package:tourist/views/bizdetails.dart';
 import 'package:tourist/views/cities.dart';
@@ -25,57 +26,88 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  late String name;
+  late String image;
+  late bool isAdmin;
+
+  getprefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      name = prefs.getString('name')!;
+      image = prefs.getString('image')!;
+      isAdmin = prefs.getBool('isAdmin')!;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     getdata();
+    getprefs();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
-                child: Text(
-                  'Let\'s \nExplore ',
-                  style: heading2.copyWith(color: textBlack, fontSize: 35),
+        floatingActionButton: Visibility(
+          visible: isAdmin,
+          child: FloatingActionButton(
+              child: const Icon(Icons.add),
+              onPressed: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => FeaturedCity(),
+                //   ),
+                // );
+              }),
+        ),
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
+                      child: Text(
+                        'Let\'s \nExplore ',
+                        style:
+                            heading2.copyWith(color: textBlack, fontSize: 35),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          SizedBox(
-              height: MediaQuery.of(context).size.height * 0.25,
-              child: CustomListView(
-                widget: widget,
-                database: database,
-              )),
-          FeaturedSite(database: database, widget: widget),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
-                child: Text(
-                  'Businesses',
-                  style: heading2.copyWith(color: textBlack, fontSize: 35),
+                SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    child: CustomListView(
+                      widget: widget,
+                      database: database,
+                    )),
+                FeaturedSite(database: database, widget: widget),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
+                      child: Text(
+                        'Businesses',
+                        style:
+                            heading2.copyWith(color: textBlack, fontSize: 35),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.26,
-            child: CustomBottomList(
-              widget: widget,
-              database: database,
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.26,
+                  child: CustomBottomList(
+                    widget: widget,
+                    database: database,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
-    ));
+        ));
   }
 }
 

@@ -1,9 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tourist/theme/theme.dart';
 import 'package:tourist/views/authentication/adminchoice.dart';
-import 'package:tourist/views/authentication/signup.dart';
 import 'package:tourist/views/homepage.dart';
 import 'package:tourist/widgets/primary_button.dart';
 
@@ -23,7 +23,20 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  setprefs(String email) async {
+  setprefs(
+      {required String image,
+      required bool isAdmin,
+      required String name}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.setString('image', image);
+    prefs.setBool('isAdmin', isAdmin);
+    prefs.setString('name', name);
+  }
+
+  isloggedinprefs({
+    required String email,
+  }) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('email', email);
   }
@@ -192,19 +205,31 @@ class _LoginPageState extends State<LoginPage> {
                     child: InkWell(
                       onTap: () async {
                         User? user = await loginUsingEmailPassword(
-                            email: emailController.text,
-                            password: passwordController.text,
-                            context: context);
-                        if (user != null) {
+                                email: emailController.text,
+                                password: passwordController.text,
+                                context: context)
+                            .then((value) {
+                          var firebaseUser = FirebaseAuth.instance.currentUser!;
+                          FirebaseFirestore.instance
+                              .collection("users")
+                              .doc(firebaseUser.uid)
+                              .get()
+                              .then((value) {
+                            setprefs(
+                              image: value.data()!['image'],
+                              isAdmin: value.data()!['isAdmin'],
+                              name: value.data()!['name'],
+                            );
+                          });
                           if (isChecked) {
-                            setprefs(emailController.text);
+                            isloggedinprefs(email: emailController.text);
                           }
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                               builder: (context) => HomePage(),
                             ),
                           );
-                        }
+                        });
                       },
                       borderRadius: BorderRadius.circular(14.0),
                       child: Center(

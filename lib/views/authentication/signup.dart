@@ -316,6 +316,7 @@ class _SignupState extends State<Signup> {
                                   .collection('users')
                                   .doc(value!.uid)
                                   .set({
+                                'uid': value.uid,
                                 'name': widget.name,
                                 'email': value.email,
                                 'image': widget.base64,
