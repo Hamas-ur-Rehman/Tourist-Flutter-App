@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -314,25 +316,20 @@ class _SignupState extends State<Signup> {
                                   .collection('users')
                                   .doc(value!.uid)
                                   .set({
-                                // 'name': name,
+                                'name': widget.name,
                                 'email': value.email,
-                                // 'phone': phone,
-                                // 'address': address,
-                                'isAdmin': false,
-                                'isVerified': false,
-                                'isBlocked': false,
-                                'isDeleted': false,
+                                'image': widget.base64,
+                                'isAdmin': widget.adminstatus,
                                 'createdAt': Timestamp.now(),
                                 'updatedAt': Timestamp.now(),
                               });
-                            });
-                            if (user != null) {
+
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) => HomePage(),
                                 ),
                               );
-                            }
+                            });
                           }
                         }
                       },

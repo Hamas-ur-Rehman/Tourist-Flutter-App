@@ -2,8 +2,10 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tourist/theme/theme.dart';
 import 'package:tourist/views/authentication/signup.dart';
@@ -20,6 +22,7 @@ final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 class _UserDetailsState extends State<UserDetails> {
   var _image;
   late String name;
+  late String img64;
   Future getImageFromGallery() async {
     ImagePicker imagePicker = ImagePicker();
     var image = await imagePicker.pickImage(source: ImageSource.gallery);
@@ -216,10 +219,22 @@ class _UserDetailsState extends State<UserDetails> {
                       child: InkWell(
                         onTap: () async {
                           if (_formKey.currentState!.validate()) {
-                            final bytes = await _image == null
-                                ? 'assets/images/login.png'
-                                : _image.readAsBytes();
-                            String img64 = base64Encode(bytes);
+                            if (_image == null) {
+                              ByteData bytes = await rootBundle
+                                  .load('assets/images/logo_splash.png');
+                              var buffer = bytes.buffer;
+                              String img =
+                                  base64.encode(Uint8List.view(buffer));
+                              setState(() {
+                                img64 = img;
+                              });
+                            } else {
+                              final bytes = await _image.readAsBytes();
+                              String img = base64Encode(bytes);
+                              setState(() {
+                                img64 = img;
+                              });
+                            }
 
                             Navigator.push(
                               context,
@@ -227,7 +242,7 @@ class _UserDetailsState extends State<UserDetails> {
                                   builder: (context) => Signup(
                                         adminstatus: widget.adminstatus,
                                         base64: img64,
-                                        name: name,
+                                        name: name.toString(),
                                       )),
                             );
                           }
