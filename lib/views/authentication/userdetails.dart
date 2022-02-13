@@ -1,5 +1,6 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors_in_immutables
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 class _UserDetailsState extends State<UserDetails> {
   var _image;
+  late String name;
   Future getImageFromGallery() async {
     ImagePicker imagePicker = ImagePicker();
     var image = await imagePicker.pickImage(source: ImageSource.gallery);
@@ -185,7 +187,7 @@ class _UserDetailsState extends State<UserDetails> {
                       return null;
                     },
                     onChanged: (value) {
-                      //
+                      name = value;
                     },
                     decoration: InputDecoration(
                       hintText: 'Name',
@@ -212,13 +214,20 @@ class _UserDetailsState extends State<UserDetails> {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: () {
+                        onTap: () async {
                           if (_formKey.currentState!.validate()) {
+                            final bytes = await _image == null
+                                ? 'assets/images/login.png'
+                                : _image.readAsBytes();
+                            String img64 = base64Encode(bytes);
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Signup(
                                         adminstatus: widget.adminstatus,
+                                        base64: img64,
+                                        name: name,
                                       )),
                             );
                           }

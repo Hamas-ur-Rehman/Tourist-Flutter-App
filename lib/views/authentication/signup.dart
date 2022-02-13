@@ -9,7 +9,14 @@ import '../homepage.dart';
 
 class Signup extends StatefulWidget {
   bool adminstatus;
-  Signup({Key? key, required this.adminstatus}) : super(key: key);
+  String base64;
+  String name;
+  Signup(
+      {Key? key,
+      required this.adminstatus,
+      required this.base64,
+      required this.name})
+      : super(key: key);
 
   @override
   _SignupState createState() => _SignupState();
