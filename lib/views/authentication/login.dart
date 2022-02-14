@@ -17,6 +17,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool passwordVisible = false;
   bool isChecked = false;
+  bool adminStatus = false;
   void togglePassword() {
     setState(() {
       passwordVisible = !passwordVisible;
@@ -220,13 +221,18 @@ class _LoginPageState extends State<LoginPage> {
                               isAdmin: value.data()!['isAdmin'],
                               name: value.data()!['name'],
                             );
+                            setState(() {
+                              adminStatus = value.data()!['isAdmin'];
+                            });
                           });
                           if (isChecked) {
                             isloggedinprefs(email: emailController.text);
                           }
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) => HomePage(),
+                              builder: (context) => HomePage(
+                                adminstatus: adminStatus,
+                              ),
                             ),
                           );
                         });

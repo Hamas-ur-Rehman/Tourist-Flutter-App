@@ -6,12 +6,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tourist/theme/theme.dart';
 import 'package:tourist/views/bizdetails.dart';
 import 'package:tourist/views/cities.dart';
+import 'package:tourist/views/profile.dart';
 import 'dart:math';
 
 import 'featuredcity.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+  bool adminstatus;
+  HomePage({this.adminstatus = false, Key? key}) : super(key: key);
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
@@ -28,7 +30,7 @@ class _HomePageState extends State<HomePage> {
 
   late String name;
   late String image;
-  late bool isAdmin;
+  bool isAdmin = false;
 
   getprefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -67,6 +69,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
                       padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
@@ -75,6 +78,23 @@ class _HomePageState extends State<HomePage> {
                         style:
                             heading2.copyWith(color: textBlack, fontSize: 35),
                       ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconButton(
+                          icon: const Icon(
+                            Icons.person,
+                            size: 30,
+                            color: Color(0xff2972ff),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Profile(),
+                              ),
+                            );
+                          }),
                     ),
                   ],
                 ),

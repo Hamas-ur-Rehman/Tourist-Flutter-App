@@ -23,11 +23,13 @@ class _MyAppState extends State<MyApp> {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   var email;
+  var isAdmin;
 
   getprefs() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       email = preferences.getString('email');
+      isAdmin = preferences.getBool('isAdmin');
     });
   }
 
@@ -47,7 +49,11 @@ class _MyAppState extends State<MyApp> {
             print(snapshot.error);
           }
           if (snapshot.connectionState == ConnectionState.done) {
-            return email == null ? const LoginPage() : HomePage();
+            return email == null
+                ? const LoginPage()
+                : HomePage(
+                    adminstatus: isAdmin,
+                  );
           } else {
             return const Scaffold(
               body: Center(

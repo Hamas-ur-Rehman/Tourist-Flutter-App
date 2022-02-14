@@ -327,7 +327,9 @@ class _SignupState extends State<Signup> {
 
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                  builder: (context) => HomePage(),
+                                  builder: (context) => HomePage(
+                                    adminstatus: widget.adminstatus,
+                                  ),
                                 ),
                               );
                             });
