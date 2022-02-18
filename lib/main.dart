@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tourist/views/adminHomepage.dart';
 import 'package:tourist/views/authentication/login.dart';
 import 'package:tourist/views/homepage.dart';
 
@@ -30,6 +31,7 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       email = preferences.getString('email');
       isAdmin = preferences.getBool('isAdmin');
+      name = preferences.getString('name');
     });
   }
 
@@ -53,9 +55,12 @@ class _MyAppState extends State<MyApp> {
             print("admin is $isAdmin");
             return email == "" || email == null
                 ? const LoginPage()
-                : HomePage(
-                    adminstatus: isAdmin,
-                  );
+                : isAdmin
+                    ? AdminHomePage(name: name, email: email)
+                    : HomePage(
+                        email: email,
+                        name: name,
+                      );
           } else {
             return const Scaffold(
               body: Center(

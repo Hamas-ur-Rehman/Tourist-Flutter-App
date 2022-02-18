@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'dart:typed_data';
+// ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,7 +6,15 @@ import 'package:tourist/main.dart';
 import 'package:tourist/theme/theme.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
+  String namex;
+  String emailx;
+  bool adminx;
+  Profile(
+      {required this.namex,
+      required this.emailx,
+      required this.adminx,
+      Key? key})
+      : super(key: key);
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -17,7 +23,6 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   String? email;
   bool? isAdmin;
-  String? image;
   String? name;
 
   getprefs() async {
@@ -25,9 +30,7 @@ class _ProfileState extends State<Profile> {
     setState(() {
       email = preferences.getString('email');
       isAdmin = preferences.getBool('isAdmin');
-      image = preferences.getString('image');
       name = preferences.getString('name');
-      _bytesImage = const Base64Decoder().convert(image!);
     });
   }
 
@@ -38,8 +41,6 @@ class _ProfileState extends State<Profile> {
     preferences.setString('image', "");
     preferences.setString('name', "");
   }
-
-  late Uint8List _bytesImage;
 
   @override
   void initState() {
@@ -59,26 +60,18 @@ class _ProfileState extends State<Profile> {
           const SizedBox(
             height: 30,
           ),
-          SizedBox(
-            height: 120,
-            width: 120,
-            child: CircleAvatar(
-              backgroundImage: MemoryImage(_bytesImage),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
           Text(
-            name ?? 'name',
+            name ?? widget.namex,
             style: TextStyle(fontSize: 20),
           ),
           Text(
-            email ?? 'email',
+            email ?? widget.emailx,
             style: TextStyle(fontSize: 20),
           ),
           Text(
-            isAdmin == true ? 'Business account' : 'Tourist account',
+            isAdmin == true || widget.adminx
+                ? 'Business account'
+                : 'Tourist account',
             style: TextStyle(fontSize: 20),
           ),
           const SizedBox(height: 30),

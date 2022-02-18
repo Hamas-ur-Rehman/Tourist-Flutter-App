@@ -11,7 +11,10 @@ import 'dart:math';
 import 'featuredcity.dart';
 
 class AdminHomePage extends StatefulWidget {
-  AdminHomePage({Key? key}) : super(key: key);
+  String name;
+  String email;
+  AdminHomePage({required this.name, required this.email, Key? key})
+      : super(key: key);
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
@@ -30,6 +33,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   void initState() {
     super.initState();
     getdata();
+    setState(() {});
   }
 
   @override
@@ -75,7 +79,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const Profile(),
+                                builder: (context) => Profile(
+                                  namex: widget.name,
+                                  emailx: widget.email,
+                                  adminx: true,
+                                ),
                               ),
                             );
                           }),

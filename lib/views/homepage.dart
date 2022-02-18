@@ -11,8 +11,10 @@ import 'dart:math';
 import 'featuredcity.dart';
 
 class HomePage extends StatefulWidget {
-  bool adminstatus;
-  HomePage({required this.adminstatus, Key? key}) : super(key: key);
+  String name;
+  String email;
+  HomePage({required this.name, required this.email, Key? key})
+      : super(key: key);
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
@@ -20,17 +22,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var database;
-  getdata() {
-    setState(() {
-      database = widget.firestore.collection('peshawar').snapshots();
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    getdata();
+    setState(() {});
   }
 
   @override
@@ -62,7 +57,11 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const Profile(),
+                            builder: (context) => Profile(
+                              adminx: false,
+                              namex: widget.name,
+                              emailx: widget.email,
+                            ),
                           ),
                         );
                       }),
@@ -73,9 +72,8 @@ class _HomePageState extends State<HomePage> {
                 height: MediaQuery.of(context).size.height * 0.25,
                 child: CustomListView(
                   widget: widget,
-                  database: database,
                 )),
-            FeaturedSite(database: database, widget: widget),
+            FeaturedSite(widget: widget),
             Row(
               children: [
                 Padding(
@@ -91,7 +89,6 @@ class _HomePageState extends State<HomePage> {
               height: MediaQuery.of(context).size.height * 0.26,
               child: CustomBottomList(
                 widget: widget,
-                database: database,
               ),
             ),
           ],
@@ -104,7 +101,6 @@ class _HomePageState extends State<HomePage> {
 class FeaturedSite extends StatelessWidget {
   FeaturedSite({
     Key? key,
-    required this.database,
     required this.widget,
   }) : super(key: key);
 
@@ -114,7 +110,7 @@ class FeaturedSite extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-        stream: database,
+        stream: widget.firestore.collection('peshawar').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const SizedBox();
@@ -171,19 +167,17 @@ class FeaturedSite extends StatelessWidget {
 }
 
 class CustomBottomList extends StatelessWidget {
-  CustomBottomList({
+  const CustomBottomList({
     Key? key,
     required this.widget,
-    required this.database,
   }) : super(key: key);
 
   final HomePage widget;
-  var database;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-        stream: database,
+        stream: widget.firestore.collection('peshawar').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const SizedBox();
@@ -262,20 +256,18 @@ class CustomBottomList extends StatelessWidget {
 }
 
 class CustomListView extends StatelessWidget {
-  CustomListView({
+  const CustomListView({
     Key? key,
     required this.widget,
-    required this.database,
   }) : super(key: key);
 
   final HomePage widget;
-  var database;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: StreamBuilder<QuerySnapshot>(
-          stream: database,
+          stream: widget.firestore.collection('peshawar').snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const SizedBox();

@@ -356,9 +356,13 @@ class _SignupState extends State<Signup> {
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (context) => widget.adminstatus
-                                        ? AdminHomePage()
+                                        ? AdminHomePage(
+                                            name: name,
+                                            email: email,
+                                          )
                                         : HomePage(
-                                            adminstatus: false,
+                                            name: name,
+                                            email: email,
                                           ),
                                   ),
                                 );
