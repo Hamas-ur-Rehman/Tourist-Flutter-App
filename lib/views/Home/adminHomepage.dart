@@ -1,116 +1,142 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, must_be_immutable
+// ignore_for_file: prefer_typing_uninitialized_variables, must_be_immutable, file_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tourist/theme/theme.dart';
-import 'package:tourist/views/bizdetails.dart';
-import 'package:tourist/views/cities.dart';
-import 'package:tourist/views/profile.dart';
+import 'package:tourist/views/HomeComponents/bizdetails.dart';
+import 'package:tourist/views/HomeComponents/cities.dart';
+import 'package:tourist/views/Profile/profile.dart';
 import 'dart:math';
 
-import 'featuredcity.dart';
+import '../HomeComponents/featuredcity.dart';
 
-class HomePage extends StatefulWidget {
+class AdminHomePage extends StatefulWidget {
   String name;
   String email;
-  HomePage({required this.name, required this.email, Key? key})
+  AdminHomePage({required this.name, required this.email, Key? key})
       : super(key: key);
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<AdminHomePage> createState() => _AdminHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _AdminHomePageState extends State<AdminHomePage> {
+  var database;
+  getdata() {
+    setState(() {
+      database = widget.firestore.collection('peshawar').snapshots();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    getdata();
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-      child: SafeArea(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
-                  child: Text(
-                    'Let\'s \nExplore ',
-                    style: heading2.copyWith(color: textBlack, fontSize: 35),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(
-                      icon: const Icon(
-                        Icons.person,
-                        size: 30,
-                        color: Color(0xff2972ff),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Profile(
-                              adminx: false,
-                              namex: widget.name,
-                              emailx: widget.email,
-                            ),
-                          ),
-                        );
-                      }),
-                ),
-              ],
-            ),
-            SizedBox(
-                height: MediaQuery.of(context).size.height * 0.25,
-                child: CustomListView(
-                  widget: widget,
-                )),
-            FeaturedSite(widget: widget),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
-                  child: Text(
-                    'Businesses',
-                    style: heading2.copyWith(color: textBlack, fontSize: 35),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.26,
-              child: CustomBottomList(
-                widget: widget,
-              ),
-            ),
-          ],
+        floatingActionButton: Visibility(
+          visible: true,
+          child: FloatingActionButton(
+              child: const Icon(Icons.add),
+              onPressed: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => FeaturedCity(),
+                //   ),
+                // );
+              }),
         ),
-      ),
-    ));
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
+                      child: Text(
+                        'Let\'s \nExplore ',
+                        style:
+                            heading2.copyWith(color: textBlack, fontSize: 35),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconButton(
+                          icon: const Icon(
+                            Icons.person,
+                            size: 30,
+                            color: Color(0xff2972ff),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Profile(
+                                  namex: widget.name,
+                                  emailx: widget.email,
+                                  adminx: true,
+                                ),
+                              ),
+                            );
+                          }),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    child: CustomListView(
+                      widget: widget,
+                      database: database,
+                    )),
+                FeaturedSite(database: database, widget: widget),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
+                      child: Text(
+                        'Businesses',
+                        style:
+                            heading2.copyWith(color: textBlack, fontSize: 35),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.26,
+                  child: CustomBottomList(
+                    widget: widget,
+                    database: database,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
 
 class FeaturedSite extends StatelessWidget {
   FeaturedSite({
     Key? key,
+    required this.database,
     required this.widget,
   }) : super(key: key);
 
   var database;
-  final HomePage widget;
+  final AdminHomePage widget;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-        stream: widget.firestore.collection('peshawar').snapshots(),
+        stream: database,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const SizedBox();
@@ -167,17 +193,19 @@ class FeaturedSite extends StatelessWidget {
 }
 
 class CustomBottomList extends StatelessWidget {
-  const CustomBottomList({
+  CustomBottomList({
     Key? key,
     required this.widget,
+    required this.database,
   }) : super(key: key);
 
-  final HomePage widget;
+  final AdminHomePage widget;
+  var database;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-        stream: widget.firestore.collection('peshawar').snapshots(),
+        stream: database,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const SizedBox();
@@ -256,18 +284,20 @@ class CustomBottomList extends StatelessWidget {
 }
 
 class CustomListView extends StatelessWidget {
-  const CustomListView({
+  CustomListView({
     Key? key,
     required this.widget,
+    required this.database,
   }) : super(key: key);
 
-  final HomePage widget;
+  final AdminHomePage widget;
+  var database;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: StreamBuilder<QuerySnapshot>(
-          stream: widget.firestore.collection('peshawar').snapshots(),
+          stream: database,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const SizedBox();

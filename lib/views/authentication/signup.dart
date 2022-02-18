@@ -5,10 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tourist/theme/theme.dart';
-import 'package:tourist/views/adminHomepage.dart';
+import 'package:tourist/views/Home/adminHomepage.dart';
 import 'package:tourist/views/authentication/login.dart';
 
-import '../homepage.dart';
+import '../Home/homepage.dart';
 
 class Signup extends StatefulWidget {
   bool adminstatus;

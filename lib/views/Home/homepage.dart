@@ -1,142 +1,116 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, must_be_immutable, file_names
+// ignore_for_file: prefer_typing_uninitialized_variables, must_be_immutable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tourist/theme/theme.dart';
-import 'package:tourist/views/bizdetails.dart';
-import 'package:tourist/views/cities.dart';
-import 'package:tourist/views/profile.dart';
+import 'package:tourist/views/HomeComponents/bizdetails.dart';
+import 'package:tourist/views/HomeComponents/cities.dart';
+import 'package:tourist/views/Profile/profile.dart';
 import 'dart:math';
 
-import 'featuredcity.dart';
+import '../HomeComponents/featuredcity.dart';
 
-class AdminHomePage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   String name;
   String email;
-  AdminHomePage({required this.name, required this.email, Key? key})
+  HomePage({required this.name, required this.email, Key? key})
       : super(key: key);
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
-  State<AdminHomePage> createState() => _AdminHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _AdminHomePageState extends State<AdminHomePage> {
-  var database;
-  getdata() {
-    setState(() {
-      database = widget.firestore.collection('peshawar').snapshots();
-    });
-  }
-
+class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    getdata();
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: Visibility(
-          visible: true,
-          child: FloatingActionButton(
-              child: const Icon(Icons.add),
-              onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => FeaturedCity(),
-                //   ),
-                // );
-              }),
-        ),
         body: SingleChildScrollView(
-          child: SafeArea(
-            child: Column(
+      child: SafeArea(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
-                      child: Text(
-                        'Let\'s \nExplore ',
-                        style:
-                            heading2.copyWith(color: textBlack, fontSize: 35),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
+                  child: Text(
+                    'Let\'s \nExplore ',
+                    style: heading2.copyWith(color: textBlack, fontSize: 35),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IconButton(
+                      icon: const Icon(
+                        Icons.person,
+                        size: 30,
+                        color: Color(0xff2972ff),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: IconButton(
-                          icon: const Icon(
-                            Icons.person,
-                            size: 30,
-                            color: Color(0xff2972ff),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Profile(
+                              adminx: false,
+                              namex: widget.name,
+                              emailx: widget.email,
+                            ),
                           ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Profile(
-                                  namex: widget.name,
-                                  emailx: widget.email,
-                                  adminx: true,
-                                ),
-                              ),
-                            );
-                          }),
-                    ),
-                  ],
+                        );
+                      }),
                 ),
-                SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.25,
-                    child: CustomListView(
-                      widget: widget,
-                      database: database,
-                    )),
-                FeaturedSite(database: database, widget: widget),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
-                      child: Text(
-                        'Businesses',
-                        style:
-                            heading2.copyWith(color: textBlack, fontSize: 35),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.26,
-                  child: CustomBottomList(
-                    widget: widget,
-                    database: database,
+              ],
+            ),
+            SizedBox(
+                height: MediaQuery.of(context).size.height * 0.25,
+                child: CustomListView(
+                  widget: widget,
+                )),
+            FeaturedSite(widget: widget),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
+                  child: Text(
+                    'Businesses',
+                    style: heading2.copyWith(color: textBlack, fontSize: 35),
                   ),
                 ),
               ],
             ),
-          ),
-        ));
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.26,
+              child: CustomBottomList(
+                widget: widget,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ));
   }
 }
 
 class FeaturedSite extends StatelessWidget {
   FeaturedSite({
     Key? key,
-    required this.database,
     required this.widget,
   }) : super(key: key);
 
   var database;
-  final AdminHomePage widget;
+  final HomePage widget;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-        stream: database,
+        stream: widget.firestore.collection('peshawar').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const SizedBox();
@@ -193,19 +167,17 @@ class FeaturedSite extends StatelessWidget {
 }
 
 class CustomBottomList extends StatelessWidget {
-  CustomBottomList({
+  const CustomBottomList({
     Key? key,
     required this.widget,
-    required this.database,
   }) : super(key: key);
 
-  final AdminHomePage widget;
-  var database;
+  final HomePage widget;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-        stream: database,
+        stream: widget.firestore.collection('peshawar').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const SizedBox();
@@ -284,20 +256,18 @@ class CustomBottomList extends StatelessWidget {
 }
 
 class CustomListView extends StatelessWidget {
-  CustomListView({
+  const CustomListView({
     Key? key,
     required this.widget,
-    required this.database,
   }) : super(key: key);
 
-  final AdminHomePage widget;
-  var database;
+  final HomePage widget;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: StreamBuilder<QuerySnapshot>(
-          stream: database,
+          stream: widget.firestore.collection('peshawar').snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const SizedBox();

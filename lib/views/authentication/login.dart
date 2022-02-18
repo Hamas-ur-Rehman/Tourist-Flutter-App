@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tourist/theme/theme.dart';
-import 'package:tourist/views/adminHomepage.dart';
+import 'package:tourist/views/Home/adminHomepage.dart';
 import 'package:tourist/views/authentication/adminchoice.dart';
-import 'package:tourist/views/homepage.dart';
+import 'package:tourist/views/Home/homepage.dart';
 import 'package:tourist/widgets/primary_button.dart';
 
 class LoginPage extends StatefulWidget {

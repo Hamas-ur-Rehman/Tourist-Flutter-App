@@ -3,9 +3,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tourist/views/adminHomepage.dart';
+import 'package:tourist/views/Home/adminHomepage.dart';
 import 'package:tourist/views/authentication/login.dart';
-import 'package:tourist/views/homepage.dart';
+import 'package:tourist/views/Home/homepage.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
