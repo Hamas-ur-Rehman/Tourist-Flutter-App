@@ -24,7 +24,7 @@ class _MyAppState extends State<MyApp> {
 
   var email;
   var isAdmin;
-
+  var name;
   getprefs() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
@@ -49,7 +49,9 @@ class _MyAppState extends State<MyApp> {
             print(snapshot.error);
           }
           if (snapshot.connectionState == ConnectionState.done) {
-            return email == null
+            print("email is $email");
+            print("admin is $isAdmin");
+            return email == "" || email == null
                 ? const LoginPage()
                 : HomePage(
                     adminstatus: isAdmin,

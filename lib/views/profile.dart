@@ -4,9 +4,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tourist/main.dart';
 import 'package:tourist/theme/theme.dart';
-
-import 'authentication/login.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -30,6 +29,14 @@ class _ProfileState extends State<Profile> {
       name = preferences.getString('name');
       _bytesImage = const Base64Decoder().convert(image!);
     });
+  }
+
+  removePrefs() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('email', "");
+    preferences.setBool('isAdmin', false);
+    preferences.setString('image', "");
+    preferences.setString('name', "");
   }
 
   late Uint8List _bytesImage;
@@ -71,7 +78,7 @@ class _ProfileState extends State<Profile> {
             style: TextStyle(fontSize: 20),
           ),
           Text(
-            isAdmin != null ? 'Admin' : 'User',
+            isAdmin == true ? 'Business account' : 'Tourist account',
             style: TextStyle(fontSize: 20),
           ),
           const SizedBox(height: 30),
@@ -89,14 +96,12 @@ class _ProfileState extends State<Profile> {
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: () async {
-                      SharedPreferences preferences =
-                          await SharedPreferences.getInstance();
-                      await preferences.clear();
+                    onTap: () {
+                      removePrefs();
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (BuildContext context) => const LoginPage(),
+                          builder: (BuildContext context) => const MyApp(),
                         ),
                         (route) => false,
                       );

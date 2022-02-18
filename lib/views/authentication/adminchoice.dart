@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tourist/theme/theme.dart';
-import 'package:tourist/views/authentication/userdetails.dart';
+import 'package:tourist/views/authentication/signup.dart';
 
 class ChooseAdmin extends StatefulWidget {
   const ChooseAdmin({Key? key}) : super(key: key);
@@ -39,7 +39,9 @@ class _ChooseAdminState extends State<ChooseAdmin> {
                   ),
                 ],
               ),
-              const SizedBox(height: 30),
+              const SizedBox(
+                height: 30,
+              ),
               Row(
                 children: [
                   Expanded(
@@ -82,9 +84,9 @@ class _ChooseAdminState extends State<ChooseAdmin> {
                               const SizedBox(
                                 height: 15,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Expanded(
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
                                   child: Text(
                                     'Business account allows you to create and manage and add your own services your own business profile.',
                                     style: heading6.copyWith(
@@ -143,9 +145,9 @@ class _ChooseAdminState extends State<ChooseAdmin> {
                               const SizedBox(
                                 height: 15,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Expanded(
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
                                   child: Text(
                                     'Tourist account allows you to browse places and book hotels and other services.',
                                     style: heading6.copyWith(
@@ -183,7 +185,7 @@ class _ChooseAdminState extends State<ChooseAdmin> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => UserDetails(
+                              builder: (context) => Signup(
                                     adminstatus: adminstatus,
                                   )),
                         );

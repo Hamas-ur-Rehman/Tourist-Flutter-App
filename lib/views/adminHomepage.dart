@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, must_be_immutable
+// ignore_for_file: prefer_typing_uninitialized_variables, must_be_immutable, file_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -10,16 +10,15 @@ import 'dart:math';
 
 import 'featuredcity.dart';
 
-class HomePage extends StatefulWidget {
-  bool adminstatus;
-  HomePage({required this.adminstatus, Key? key}) : super(key: key);
+class AdminHomePage extends StatefulWidget {
+  AdminHomePage({Key? key}) : super(key: key);
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<AdminHomePage> createState() => _AdminHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _AdminHomePageState extends State<AdminHomePage> {
   var database;
   getdata() {
     setState(() {
@@ -36,68 +35,83 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-      child: SafeArea(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
-                  child: Text(
-                    'Let\'s \nExplore ',
-                    style: heading2.copyWith(color: textBlack, fontSize: 35),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(
-                      icon: const Icon(
-                        Icons.person,
-                        size: 30,
-                        color: Color(0xff2972ff),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Profile(),
-                          ),
-                        );
-                      }),
-                ),
-              ],
-            ),
-            SizedBox(
-                height: MediaQuery.of(context).size.height * 0.25,
-                child: CustomListView(
-                  widget: widget,
-                  database: database,
-                )),
-            FeaturedSite(database: database, widget: widget),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
-                  child: Text(
-                    'Businesses',
-                    style: heading2.copyWith(color: textBlack, fontSize: 35),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.26,
-              child: CustomBottomList(
-                widget: widget,
-                database: database,
-              ),
-            ),
-          ],
+        floatingActionButton: Visibility(
+          visible: true,
+          child: FloatingActionButton(
+              child: const Icon(Icons.add),
+              onPressed: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => FeaturedCity(),
+                //   ),
+                // );
+              }),
         ),
-      ),
-    ));
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
+                      child: Text(
+                        'Let\'s \nExplore ',
+                        style:
+                            heading2.copyWith(color: textBlack, fontSize: 35),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: IconButton(
+                          icon: const Icon(
+                            Icons.person,
+                            size: 30,
+                            color: Color(0xff2972ff),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Profile(),
+                              ),
+                            );
+                          }),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    child: CustomListView(
+                      widget: widget,
+                      database: database,
+                    )),
+                FeaturedSite(database: database, widget: widget),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
+                      child: Text(
+                        'Businesses',
+                        style:
+                            heading2.copyWith(color: textBlack, fontSize: 35),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.26,
+                  child: CustomBottomList(
+                    widget: widget,
+                    database: database,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
 
@@ -109,7 +123,7 @@ class FeaturedSite extends StatelessWidget {
   }) : super(key: key);
 
   var database;
-  final HomePage widget;
+  final AdminHomePage widget;
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +191,7 @@ class CustomBottomList extends StatelessWidget {
     required this.database,
   }) : super(key: key);
 
-  final HomePage widget;
+  final AdminHomePage widget;
   var database;
 
   @override
@@ -268,7 +282,7 @@ class CustomListView extends StatelessWidget {
     required this.database,
   }) : super(key: key);
 
-  final HomePage widget;
+  final AdminHomePage widget;
   var database;
 
   @override

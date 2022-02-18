@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tourist/theme/theme.dart';
+import 'package:tourist/views/adminHomepage.dart';
 import 'package:tourist/views/authentication/adminchoice.dart';
 import 'package:tourist/views/homepage.dart';
 import 'package:tourist/widgets/primary_button.dart';
@@ -29,17 +30,20 @@ class _LoginPageState extends State<LoginPage> {
       required bool isAdmin,
       required String name}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    prefs.setString('image', image);
-    prefs.setBool('isAdmin', isAdmin);
-    prefs.setString('name', name);
+    setState(() {
+      prefs.setString('image', image);
+      prefs.setBool('isAdmin', isAdmin);
+      prefs.setString('name', name);
+    });
   }
 
   isloggedinprefs({
     required String email,
   }) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('email', email);
+    setState(() {
+      prefs.setString('email', email);
+    });
   }
 
   //login function
@@ -71,6 +75,8 @@ class _LoginPageState extends State<LoginPage> {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,6 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: 48,
               ),
               Form(
+                key: _formKey,
                 child: Column(
                   children: [
                     Container(
@@ -112,6 +119,17 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: TextFormField(
                         controller: emailController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter email';
+                          }
+                          if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                              .hasMatch(value)) {
+                            return 'Please enter valid email';
+                          }
+                          return null;
+                        },
+                        keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           hintText: 'Email',
                           hintStyle: heading6.copyWith(color: textGrey),
@@ -130,6 +148,13 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(14.0),
                       ),
                       child: TextFormField(
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter password';
+                          }
+
+                          return null;
+                        },
                         controller: passwordController,
                         obscureText: !passwordVisible,
                         decoration: InputDecoration(
@@ -205,37 +230,44 @@ class _LoginPageState extends State<LoginPage> {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () async {
-                        User? user = await loginUsingEmailPassword(
-                                email: emailController.text,
-                                password: passwordController.text,
-                                context: context)
-                            .then((value) {
-                          var firebaseUser = FirebaseAuth.instance.currentUser!;
-                          FirebaseFirestore.instance
-                              .collection("users")
-                              .doc(firebaseUser.uid)
-                              .get()
+                        if (_formKey.currentState!.validate()) {
+                          User? user = await loginUsingEmailPassword(
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                  context: context)
                               .then((value) {
-                            setprefs(
-                              image: value.data()!['image'],
-                              isAdmin: value.data()!['isAdmin'],
-                              name: value.data()!['name'],
-                            );
-                            setState(() {
-                              adminStatus = value.data()!['isAdmin'];
+                            var firebaseUser =
+                                FirebaseAuth.instance.currentUser!;
+                            FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(firebaseUser.uid)
+                                .get()
+                                .then((value) {
+                              setprefs(
+                                image: value.data()!['image'],
+                                isAdmin: value.data()!['isAdmin'],
+                                name: value.data()!['name'],
+                              );
+                              setState(() {
+                                adminStatus = value.data()!['isAdmin'];
+                              });
                             });
+                            if (isChecked) {
+                              isloggedinprefs(email: emailController.text);
+                            }
+                            if (value != null) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => 
+                                      ? AdminHomePage()
+                                      : HomePage(
+                                          adminstatus: adminStatus,
+                                        ),
+                                ),
+                              );
+                            }
                           });
-                          if (isChecked) {
-                            isloggedinprefs(email: emailController.text);
-                          }
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => HomePage(
-                                adminstatus: adminStatus,
-                              ),
-                            ),
-                          );
-                        });
+                        }
                       },
                       borderRadius: BorderRadius.circular(14.0),
                       child: Center(
