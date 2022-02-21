@@ -163,28 +163,20 @@ class _AdminPanelState extends State<AdminPanel> {
               SizedBox(
                   height: MediaQuery.of(context).size.height * 0.7,
                   child: ListView.builder(
-                    itemCount: ids.length,
-                    itemBuilder: (context, indexi) => SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      child: FutureBuilder(
-                        future: fetchfirestore(indexi),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return ListView.builder(
-                              itemCount: ids.length,
-                              itemBuilder: (context, indexi) {
-                                return buildbiz(0, snapshot.data);
-                              },
-                            );
-                          } else {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  )),
+                      itemCount: ids.length,
+                      itemBuilder: (context, index) {
+                        return FutureBuilder(
+                            future: fetchfirestore(index),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return buildbiz(index, snapshot.data);
+                              } else {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                            });
+                      })),
             ],
           ),
         ),
