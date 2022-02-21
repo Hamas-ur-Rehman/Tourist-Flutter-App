@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tourist/theme/theme.dart';
@@ -16,7 +18,6 @@ class AdminPanel extends StatefulWidget {
 
 class _AdminPanelState extends State<AdminPanel> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
   @override
   void initState() {
     super.initState();
@@ -28,24 +29,28 @@ class _AdminPanelState extends State<AdminPanel> {
   fetchfirestore(int index) async {
     String myDocId = ids[index]['id'];
     DocumentSnapshot? documentSnapshot;
-
+    List data = [];
     await FirebaseFirestore.instance
         .collection('peshawar/${ids[index]['location']}/biz')
         .doc(myDocId)
         .get()
         .then((value) {
-      documentSnapshot = value;
+      setState(() {
+        documentSnapshot = value;
+      });
     });
-    List data = [
-      {
-        'address': documentSnapshot!.get('address'),
-        'hotel': documentSnapshot!.get('hotel'),
-        'img': documentSnapshot!.get('img'),
-        'name': documentSnapshot!.get('name'),
-        'price': documentSnapshot!.get('price'),
-        'transport': documentSnapshot!.get('transport'),
-      }
-    ];
+    setState(() {
+      data = [
+        {
+          'address': documentSnapshot!.get('address'),
+          'hotel': documentSnapshot!.get('hotel'),
+          'img': documentSnapshot!.get('img'),
+          'name': documentSnapshot!.get('name'),
+          'price': documentSnapshot!.get('price'),
+          'transport': documentSnapshot!.get('transport'),
+        }
+      ];
+    });
     return data;
   }
 
@@ -59,7 +64,7 @@ class _AdminPanelState extends State<AdminPanel> {
         child: ListTile(
           onTap: () {},
           title: Text(
-            "${data[0]['name']}",
+            "${data['name']}",
             style: heading2.copyWith(color: textBlack),
           ),
           trailing: Icon(
@@ -78,8 +83,9 @@ class _AdminPanelState extends State<AdminPanel> {
           .get()
           .then((QuerySnapshot querySnapshot) {
         for (var doc in querySnapshot.docs) {
-          ids.add({"id": doc.id, 'location': doc['location']});
-          print(ids);
+          setState(() {
+            ids.add({"id": doc.id, 'location': doc['location']});
+          });
         }
       });
     } catch (e) {
@@ -161,22 +167,26 @@ class _AdminPanelState extends State<AdminPanel> {
                 height: 30,
               ),
               SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.7,
-                  child: ListView.builder(
-                      itemCount: ids.length,
-                      itemBuilder: (context, index) {
-                        return FutureBuilder(
-                            future: fetchfirestore(index),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return buildbiz(index, snapshot.data);
-                              } else {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                            });
-                      })),
+                height: MediaQuery.of(context).size.height * 0.7,
+                child: ListView.builder(
+                    itemCount: ids.length,
+                    itemBuilder: (context, index) {
+                      return StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection(
+                                  'peshawar/${ids[index]['location']}/biz')
+                              .doc('${ids[index]['id']}')
+                              .snapshots(),
+                          builder: (context,
+                              AsyncSnapshot<DocumentSnapshot> snapshot) {
+                            if (!snapshot.hasData) {
+                              return const SizedBox();
+                            }
+                            var userDocument = snapshot.data;
+                            return buildbiz(index, userDocument);
+                          });
+                    }),
+              ),
             ],
           ),
         ),

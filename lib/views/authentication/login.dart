@@ -308,22 +308,8 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(
                       height: 24,
                     ),
-                    Center(
-                      child: Text(
-                        'OR',
-                        style: heading6.copyWith(color: textGrey),
-                      ),
-                    ),
                     const SizedBox(
-                      height: 24,
-                    ),
-                    CustomPrimaryButton(
-                      buttonColor: const Color(0xfffbfbfb),
-                      textValue: 'Login with Google',
-                      textColor: textBlack,
-                    ),
-                    const SizedBox(
-                      height: 50,
+                      height: 5,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
