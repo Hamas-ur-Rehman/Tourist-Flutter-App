@@ -26,12 +26,14 @@ class _MyAppState extends State<MyApp> {
   var email;
   var isAdmin;
   var name;
+  var userid;
   getprefs() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       email = preferences.getString('email');
       isAdmin = preferences.getBool('isAdmin');
       name = preferences.getString('name');
+      userid = preferences.getString('userid');
     });
   }
 
@@ -56,7 +58,7 @@ class _MyAppState extends State<MyApp> {
             return email == "" || email == null
                 ? const LoginPage()
                 : isAdmin
-                    ? AdminHomePage(name: name, email: email)
+                    ? AdminHomePage(name: name, email: email, docid: userid)
                     : HomePage(
                         email: email,
                         name: name,

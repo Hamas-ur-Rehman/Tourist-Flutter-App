@@ -25,16 +25,21 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  setprefs({required bool isAdmin, required String name}) async {
+  setprefs(
+      {required bool isAdmin,
+      required String name,
+      required String userid}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       prefs.setBool('isAdmin', isAdmin);
       prefs.setString('name', name);
+      prefs.setString('userid', userid);
     });
   }
 
   late String name;
   late String email;
+  late String userid;
   isloggedinprefs({
     required String email,
   }) async {
@@ -253,17 +258,20 @@ class _LoginPageState extends State<LoginPage> {
                                     setprefs(
                                       isAdmin: value.data()!['isAdmin'],
                                       name: value.data()!['name'],
+                                      userid: value.data()!['uid'],
                                     );
                                     setState(() {
                                       adminStatus = value.data()!['isAdmin'];
                                       name = value.data()!['name'];
                                       email = value.data()!['email'];
+                                      userid = value.data()!['uid'];
                                     });
                                   });
                                   if (isChecked) {
                                     isloggedinprefs(
                                         email: emailController.text);
                                   }
+
                                   if (value != null) {
                                     Navigator.of(context).pushReplacement(
                                       MaterialPageRoute(
@@ -271,6 +279,7 @@ class _LoginPageState extends State<LoginPage> {
                                             ? AdminHomePage(
                                                 name: name,
                                                 email: email,
+                                                docid: userid,
                                               )
                                             : HomePage(
                                                 name: name,

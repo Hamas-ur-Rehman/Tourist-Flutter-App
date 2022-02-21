@@ -6,14 +6,16 @@ import 'package:tourist/theme/theme.dart';
 import 'package:tourist/views/HomeComponents/bizdetails.dart';
 import 'package:tourist/views/HomeComponents/cities.dart';
 import 'package:tourist/views/Profile/profile.dart';
+import 'package:tourist/views/admin/adminpanel.dart';
 import 'dart:math';
-
 import '../HomeComponents/featuredcity.dart';
 
 class AdminHomePage extends StatefulWidget {
   String name;
   String email;
-  AdminHomePage({required this.name, required this.email, Key? key})
+  String docid;
+  AdminHomePage(
+      {required this.name, required this.email, required this.docid, Key? key})
       : super(key: key);
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -33,7 +35,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
   void initState() {
     super.initState();
     getdata();
-    setState(() {});
   }
 
   @override
@@ -42,14 +43,16 @@ class _AdminHomePageState extends State<AdminHomePage> {
         floatingActionButton: Visibility(
           visible: true,
           child: FloatingActionButton(
-              child: const Icon(Icons.add),
+              child: const Icon(Icons.shield_sharp),
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => FeaturedCity(),
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AdminPanel(
+                      docid: widget.docid,
+                    ),
+                  ),
+                );
               }),
         ),
         body: SingleChildScrollView(

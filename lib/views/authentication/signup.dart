@@ -33,7 +33,7 @@ class _SignupState extends State<Signup> {
 
   late String email, password, pass;
   bool loading = false;
-
+  late String docid;
   //register function
   static Future<User?> registerUsingEmailPassword(
       {required String email,
@@ -350,6 +350,9 @@ class _SignupState extends State<Signup> {
                                             password: password,
                                             context: context)
                                         .then((value) async {
+                                      setState(() {
+                                        docid = value!.uid;
+                                      });
                                       await FirebaseFirestore.instance
                                           .collection('users')
                                           .doc(value?.uid)
@@ -369,6 +372,7 @@ class _SignupState extends State<Signup> {
                                                   ? AdminHomePage(
                                                       name: name,
                                                       email: email,
+                                                      docid: docid,
                                                     )
                                                   : HomePage(
                                                       name: name,
