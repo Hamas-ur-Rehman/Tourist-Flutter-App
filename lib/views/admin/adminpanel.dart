@@ -36,14 +36,20 @@ class _AdminPanelState extends State<AdminPanel> {
         .then((value) {
       documentSnapshot = value;
     });
-    var name = documentSnapshot!['name'];
-    var location = documentSnapshot!['location'];
-
-    print(name);
+    List data = [
+      {
+        'address': documentSnapshot!.get('address'),
+        'hotel': documentSnapshot!.get('hotel'),
+        'img': documentSnapshot!.get('img'),
+        'name': documentSnapshot!.get('name'),
+        'price': documentSnapshot!.get('price'),
+        'transport': documentSnapshot!.get('transport'),
+      }
+    ];
+    return data;
   }
 
-  buildbiz(index) {
-    fetchfirestore(index);
+  buildbiz(index, data) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
@@ -53,7 +59,7 @@ class _AdminPanelState extends State<AdminPanel> {
         child: ListTile(
           onTap: () {},
           title: Text(
-            "",
+            "${data[0]['name']}",
             style: heading2.copyWith(color: textBlack),
           ),
           trailing: Icon(
@@ -157,40 +163,28 @@ class _AdminPanelState extends State<AdminPanel> {
               SizedBox(
                   height: MediaQuery.of(context).size.height * 0.7,
                   child: ListView.builder(
-                      itemCount: ids.length,
-                      itemBuilder: (context, index) {
-                        return StreamBuilder<QuerySnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection(
-                                    'peshawar/${ids[index]['location']}/biz/')
-                                .snapshots(),
-                            builder: (context, snapshot) {
-                              if (!snapshot.hasData) {
-                                return const SizedBox();
-                              }
-
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: ListTile(
-                                    onTap: () {},
-                                    title: Text(
-                                      "",
-                                      style:
-                                          heading2.copyWith(color: textBlack),
-                                    ),
-                                    trailing: Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: textBlack,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            });
-                      }))
+                    itemCount: ids.length,
+                    itemBuilder: (context, indexi) => SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: FutureBuilder(
+                        future: fetchfirestore(indexi),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return ListView.builder(
+                              itemCount: ids.length,
+                              itemBuilder: (context, indexi) {
+                                return buildbiz(0, snapshot.data);
+                              },
+                            );
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  )),
             ],
           ),
         ),

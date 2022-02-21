@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tourist/theme/theme.dart';
@@ -15,6 +17,15 @@ class BizType extends StatefulWidget {
 class _BizTypeState extends State<BizType> {
   bool loading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late String randid;
+  String getRandString(int len) {
+    var r = Random();
+    const _chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    return List.generate(len, (index) => _chars[r.nextInt(_chars.length)])
+        .join();
+  }
+
   String dropdownvalue = 'Peshawar';
   var items = [
     'Peshawar',
@@ -380,11 +391,12 @@ class _BizTypeState extends State<BizType> {
                                 if (_formKey.currentState!.validate()) {
                                   setState(() {
                                     loading = true;
+                                    randid = getRandString(50);
                                   });
 
                                   await FirebaseFirestore.instance
                                       .collection('peshawar/$dropdownvalue/biz')
-                                      .doc()
+                                      .doc(randid)
                                       .set({
                                     'name': bizname,
                                     'address': bizaddress,
@@ -395,7 +407,7 @@ class _BizTypeState extends State<BizType> {
                                   }).then((value) async {
                                     await FirebaseFirestore.instance
                                         .collection('users/${widget.docid}/biz')
-                                        .doc()
+                                        .doc(randid)
                                         .set({'location': dropdownvalue}).then(
                                             (value) {
                                       Navigator.pop(context);
