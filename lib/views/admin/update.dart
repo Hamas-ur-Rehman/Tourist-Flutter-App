@@ -2,7 +2,10 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:tourist/main.dart';
 import 'package:tourist/theme/theme.dart';
+import 'package:tourist/views/Home/adminHomepage.dart';
+import 'package:tourist/views/admin/adminpanel.dart';
 
 class Update extends StatefulWidget {
   String docid;
@@ -11,6 +14,9 @@ class Update extends StatefulWidget {
   int price;
   String bizaddress;
   String imagelink;
+  bool hotel;
+  bool transport;
+  String user;
   Update(
       {required this.docid,
       required this.dropdownvalue,
@@ -18,6 +24,9 @@ class Update extends StatefulWidget {
       required this.bizaddress,
       required this.price,
       required this.imagelink,
+      required this.hotel,
+      required this.transport,
+      required this.user,
       Key? key})
       : super(key: key);
 
@@ -34,8 +43,11 @@ class _UpdateState extends State<Update> {
       addressController.text = widget.bizaddress;
       priceController.text = widget.price.toString();
       imageController.text = widget.imagelink;
+      location = widget.dropdownvalue;
     });
   }
+
+  late String location;
 
   var items = [
     'Peshawar',
@@ -46,8 +58,7 @@ class _UpdateState extends State<Update> {
     'Bahawalpur',
     'Islamabad'
   ];
-  bool hotel = false;
-  bool transport = false;
+
   TextEditingController nameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController priceController = TextEditingController();
@@ -310,27 +321,70 @@ class _UpdateState extends State<Update> {
                                   setState(() {
                                     loading = true;
                                   });
+                                  if (location != widget.dropdownvalue) {
+                                    await FirebaseFirestore.instance
+                                        .collection('peshawar/$location/biz')
+                                        .doc(widget.docid)
+                                        .delete()
+                                        .then((value) async {
+                                      await FirebaseFirestore.instance
+                                          .collection(
+                                              'users/${widget.user}/biz')
+                                          .doc(widget.docid)
+                                          .delete();
 
-                                  await FirebaseFirestore.instance
-                                      .collection(
-                                          'peshawar/${widget.dropdownvalue}/biz')
-                                      .doc(widget.docid)
-                                      .update({
-                                    'name': widget.bizname,
-                                    'address': widget.bizaddress,
-                                    'price': widget.price,
-                                    'img': widget.imagelink,
-                                  }).then((value) {
-                                    Navigator.pop(context);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'Updated Successfully',
+                                      await FirebaseFirestore.instance
+                                          .collection(
+                                              'peshawar/${widget.dropdownvalue}/biz')
+                                          .doc(widget.docid)
+                                          .set({
+                                        'name': widget.bizname,
+                                        'address': widget.bizaddress,
+                                        'price': widget.price,
+                                        'hotel': widget.hotel,
+                                        'transport': widget.transport,
+                                        'img': widget.imagelink,
+                                      }).then((value) async {
+                                        await FirebaseFirestore.instance
+                                            .collection(
+                                                'users/${widget.user}/biz')
+                                            .doc(widget.docid)
+                                            .set({
+                                          'location': widget.dropdownvalue
+                                        });
+
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  const MyApp()),
+                                          (Route<dynamic> route) => false,
+                                        );
+                                      });
+                                    });
+                                  } else {
+                                    await FirebaseFirestore.instance
+                                        .collection(
+                                            'peshawar/${widget.dropdownvalue}/biz')
+                                        .doc(widget.docid)
+                                        .update({
+                                      'name': widget.bizname,
+                                      'address': widget.bizaddress,
+                                      'price': widget.price,
+                                      'img': widget.imagelink,
+                                    }).then((value) {
+                                      Navigator.pop(context);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Updated Successfully',
+                                          ),
+                                          duration: Duration(seconds: 2),
                                         ),
-                                        duration: Duration(seconds: 2),
-                                      ),
-                                    );
-                                  });
+                                      );
+                                    });
+                                  }
                                 }
                               },
                               borderRadius: BorderRadius.circular(14.0),

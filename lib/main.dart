@@ -53,8 +53,6 @@ class _MyAppState extends State<MyApp> {
             print(snapshot.error);
           }
           if (snapshot.connectionState == ConnectionState.done) {
-            print("email is $email");
-            print("admin is $isAdmin");
             return email == "" || email == null
                 ? const LoginPage()
                 : isAdmin

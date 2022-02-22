@@ -114,13 +114,15 @@ class _AdminPanelState extends State<AdminPanel> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => Update(
-                                docid: ids[index]['id'],
-                                bizaddress: data['address'],
-                                imagelink: data['img'],
-                                bizname: data['name'],
-                                price: data['price'],
-                                dropdownvalue: ids[index]['location'],
-                              ),
+                                  docid: ids[index]['id'],
+                                  bizaddress: data['address'],
+                                  imagelink: data['img'],
+                                  bizname: data['name'],
+                                  price: data['price'],
+                                  dropdownvalue: ids[index]['location'],
+                                  transport: data['transport'],
+                                  hotel: data['hotel'],
+                                  user: widget.docid),
                             ));
                       }),
                 ],
