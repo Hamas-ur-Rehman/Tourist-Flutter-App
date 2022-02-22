@@ -29,55 +29,58 @@ class _FeaturedCityState extends State<FeaturedCity> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(7.0),
-              child: SizedBox(
-                height: 170,
-                width: double.infinity,
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18)),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(18),
-                    child: Image.network(
-                      widget.image,
-                      fit: BoxFit.cover,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(7.0),
+                child: SizedBox(
+                  height: 170,
+                  width: double.infinity,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(18),
+                      child: Image.network(
+                        widget.image,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                widget.description,
-                style: TextStyle(color: Colors.grey[800], fontSize: 18),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  widget.description,
+                  style: TextStyle(color: Colors.grey[800], fontSize: 18),
+                ),
               ),
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.12),
-            Row(
-              children: [
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                    child: Text(
-                      '${widget.name} Businesses',
-                      style: heading2.copyWith(color: textBlack, fontSize: 30),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.12),
+              Row(
+                children: [
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+                      child: Text(
+                        '${widget.name} Businesses',
+                        style:
+                            heading2.copyWith(color: textBlack, fontSize: 30),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(
-                height: MediaQuery.of(context).size.height * 0.26,
-                child: CustomBottomList(
-                    widget: widget,
-                    id: widget.id,
-                    database:
-                        widget.firestore.collection('peshawar').snapshots()))
-          ],
+                ],
+              ),
+              SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.26,
+                  child: CustomBottomList(
+                      widget: widget,
+                      id: widget.id,
+                      database:
+                          widget.firestore.collection('peshawar').snapshots()))
+            ],
+          ),
         ),
       ),
     );

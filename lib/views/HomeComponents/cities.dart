@@ -45,7 +45,7 @@ class CustomListView extends StatelessWidget {
                 String image = snapshot.data!.docs[index]['img'];
                 String description = snapshot.data!.docs[index]['description'];
 
-                String id = snapshot.data!.docs[index].id;
+                String id = widget.id;
 
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),

@@ -311,7 +311,6 @@ class CustomListView extends StatelessWidget {
                 itemBuilder: (context, index) {
                   String name = snapshot.data!.docs[index]['name'];
                   String image = snapshot.data!.docs[index]['img'];
-                  String id = snapshot.data!.docs[index].id;
 
                   return SizedBox(
                     width: MediaQuery.of(context).size.width * 0.6,
@@ -321,7 +320,8 @@ class CustomListView extends StatelessWidget {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Cities(id)),
+                            MaterialPageRoute(
+                                builder: (context) => Cities(name)),
                           );
                         },
                         child: Card(

@@ -20,6 +20,7 @@ class BizDetails extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.all(7.0),
@@ -40,7 +41,7 @@ class BizDetails extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
+              padding: const EdgeInsets.fromLTRB(5, 5, 0, 5),
               child: Text(
                 name,
                 style: heading2.copyWith(color: textBlack, fontSize: 35),
