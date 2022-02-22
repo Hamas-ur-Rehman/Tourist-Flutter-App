@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tourist/theme/theme.dart';
 
+import 'bizdetails.dart';
 import 'cities.dart';
 
 class FeaturedCity extends StatefulWidget {
@@ -120,6 +121,8 @@ class CustomBottomList extends StatelessWidget {
                     itemBuilder: (context, index) {
                       String name = snapshot.data!.docs[index]['name'];
                       String image = snapshot.data!.docs[index]['img'];
+                      String address = snapshot.data!.docs[index]['address'];
+                      int price = snapshot.data!.docs[index]['price'];
                       String id = snapshot.data!.docs[index].id;
 
                       return SizedBox(
@@ -131,7 +134,12 @@ class CustomBottomList extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Cities(id)),
+                                    builder: (context) => BizDetails(
+                                          name: name,
+                                          image: image,
+                                          address: address,
+                                          price: price,
+                                        )),
                               );
                             },
                             child: Card(

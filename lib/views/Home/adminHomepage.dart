@@ -204,7 +204,7 @@ class CustomBottomList extends StatelessWidget {
 
   final AdminHomePage widget;
   var database;
-
+  int rand = Random().nextInt(6);
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -216,7 +216,7 @@ class CustomBottomList extends StatelessWidget {
           return StreamBuilder<QuerySnapshot>(
               stream: widget.firestore
                   .collection(
-                      'peshawar/${snapshot.data!.docs[Random().nextInt(snapshot.data!.docs.length)].id}/biz')
+                      'peshawar/${snapshot.data!.docs[Random().nextInt(snapshot.data!.docs.length - 1) + 1].id}/biz')
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {

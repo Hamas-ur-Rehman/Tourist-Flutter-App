@@ -185,7 +185,7 @@ class CustomBottomList extends StatelessWidget {
           return StreamBuilder<QuerySnapshot>(
               stream: widget.firestore
                   .collection(
-                      'peshawar/${snapshot.data!.docs[Random().nextInt(snapshot.data!.docs.length)].id}/biz')
+                      'peshawar/${snapshot.data!.docs[Random().nextInt(snapshot.data!.docs.length - 1) + 1].id}/biz')
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
@@ -238,7 +238,9 @@ class CustomBottomList extends StatelessWidget {
                                         child: Text(
                                           name,
                                           style: const TextStyle(
-                                            color: Colors.white,
+                                            color: Colors.black,
+                                            backgroundColor: Colors.white54,
+                                            fontWeight: FontWeight.bold,
                                             fontSize: 20,
                                           ),
                                         )),
