@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tourist/theme/theme.dart';
+import 'package:tourist/views/HomeComponents/featuredcity.dart';
 
 class Cities extends StatefulWidget {
   final String id;
@@ -42,6 +43,8 @@ class CustomListView extends StatelessWidget {
               itemBuilder: (context, index) {
                 String name = snapshot.data!.docs[index]['name'];
                 String image = snapshot.data!.docs[index]['img'];
+                String description = snapshot.data!.docs[index]['description'];
+
                 String id = snapshot.data!.docs[index].id;
 
                 return Padding(
@@ -53,7 +56,13 @@ class CustomListView extends StatelessWidget {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Cities(id)),
+                          MaterialPageRoute(
+                              builder: (context) => FeaturedCity(
+                                    image: image,
+                                    name: name,
+                                    description: description,
+                                    id: id,
+                                  )),
                         );
                       },
                       child: Card(
@@ -74,9 +83,13 @@ class CustomListView extends StatelessWidget {
                               padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
                               child: Align(
                                 alignment: Alignment.bottomLeft,
-                                child: Text(
-                                  name,
-                                  style: heading2.copyWith(color: Colors.white),
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width - 10,
+                                  child: Text(
+                                    name,
+                                    style:
+                                        heading2.copyWith(color: Colors.white),
+                                  ),
                                 ),
                               ),
                             ),

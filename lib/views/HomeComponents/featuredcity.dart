@@ -59,11 +59,13 @@ class _FeaturedCityState extends State<FeaturedCity> {
             SizedBox(height: MediaQuery.of(context).size.height * 0.12),
             Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 5, 0, 5),
-                  child: Text(
-                    '${widget.name} Businesses',
-                    style: heading2.copyWith(color: textBlack, fontSize: 30),
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+                    child: Text(
+                      '${widget.name} Businesses',
+                      style: heading2.copyWith(color: textBlack, fontSize: 30),
+                    ),
                   ),
                 ),
               ],
